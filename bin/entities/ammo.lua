@@ -18,9 +18,9 @@ P.ammo_mgr = {}
 function P:new(init_loc, target_loc, ...)
     local args = {} -- doing this to avoid a false positive syntax editor in the linter
     args = {...}
+    args.loc = init_loc -- pass loc to Entity builder to get hitboxes
     local p = self.super.new(self, args)
 
-    p.loc = init_loc
     p.target_loc = target_loc
     p.color = args.color or self.default_color
     p.speed = args.speed or self.default_speed
