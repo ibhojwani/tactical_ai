@@ -10,8 +10,9 @@
             guys can shoot
             bullets move
             generate hitboxes
-        to do
             hit detection + death
+            retarget after kill
+        to do
             clean up dead objects
             win state
             generate terrain
@@ -147,18 +148,7 @@ function love.draw()
 
     if DEBUG then
         -- local txt = love.graphics.newText(love.graphics.getFont(), tostring(Guy.guy_mgr[1].exists))
-        love.graphics.print(tostring(Guy.guy_mgr[1].exists), 0, 0, 0, 3, 3)
+        -- love.graphics.print(tostring(Guy.guy_mgr[1].exists), 0, 0, 0, 3, 3)
     end
 end
 
-
-
--- code to make debugger better
-local love_errorhandler = love.errorhandler
-function love.errorhandler(msg)
-    if lldebugger then
-        error(msg, 2)
-    else
-        return love_errorhandler(msg)
-    end
-end

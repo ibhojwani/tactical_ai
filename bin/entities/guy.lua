@@ -22,7 +22,9 @@ function P:new(team, args)
     p.health = args.health or self.default_health
     p.width = args.width or self.default_width
     p.height = args.width or self.default_height
+    p.target = {}
     p.color = p.team.color
+    p.ammo_mgr = {}
 
     -- Set spawn location
     local screen_width = love.graphics.getWidth()
@@ -48,39 +50,48 @@ end
 
 
 function P:shoot()
-    if (not self.target) or (not self.target_dir) then return nil end
-    Ammo:new(table.copy(self.loc), table.copy(self.target_loc))
+    if (not self.target) or (not self.target_dir) or (not self.target.exists) then self:map_enemies() end
+    if (not self.target) or (not self.target_dir) or (not self.target.exists) then return nil end -- if no targets found, return
+
+    local bullet = Ammo:new(table.copy(self.loc), table.copy(self.target_loc))
 end
 
 
 function P:map_enemies()
-    if self.team.name == "team1" then
-        self.target = team2.guys[math.random(1, #team2.guys)]
-    else
-        self.target = team1.guys[math.random(1, #team1.guys)]
+    local enemy_team
+    if self.team.name == "team1" then enemy_team = team2 else enemy_team = team1 end
+
+    local i = 0
+    while (not self.target.exists) and (i < enemy_team.num_guys) do
+        self.target = enemy_team.guys[math.random(1, #enemy_team.guys)]
+        i = i + 1
     end
+
     self.target_loc = {x=self.target.loc.x, y=self.target.loc.y}
     self.target_dir = {x=self.target.loc.x - self.loc.x, y=self.target.loc.y - self.loc.y}
 end
 
 
 function P:draw_target()
-    if not self.target_loc then return nil end
+    if (not self.target_loc) or (not self.target.exists) or (not self.exists) then return nil end
     love.graphics.setColor({0.5, 0.5, 0})
     love.graphics.line(self.loc.x, self.loc.y, self.target_loc.x, self.target_loc.y)
 end
 
 
 function P:register_hit(ammo)
+    if (love.timer.getTime() - ammo.start_time) < 0.050 then return nil end
+
     self.health = self.health - ammo.damage
     if self.health <= 0 then
         self.exists = false
         self.collide = false
+        self.team.num_guys = self.team.num_guys - 1
     end
     ammo.exists = false
     ammo.collide = false
-end
 
+end
 
 
 return Guy

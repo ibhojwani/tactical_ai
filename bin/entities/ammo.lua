@@ -27,6 +27,7 @@ function P:new(init_loc, target_loc, args)
     p.height = args.height or self.default_height
     p.bullet_var = args.color or self.default_bullet_var
     p.damage = args.color or self.default_damage
+    p.start_time = love.timer.getTime()
 
     -- get direction of travel by getting vector between init and target locations, and adding random fuzz
     local dir = Utils.vec_sub(p.target_loc, p.loc)
@@ -37,6 +38,7 @@ function P:new(init_loc, target_loc, args)
     setmetatable(p, self)
 
     self.ammo_mgr[#self.ammo_mgr+1] = p
+
     return p
 end
 
