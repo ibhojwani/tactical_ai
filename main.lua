@@ -25,7 +25,9 @@
 --]]
 
 
-if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
+local lldebugger
+if arg[#arg] == "vsc_debug" then lldebugger = require("lldebugger").start() end
+
 local Ammo = require "bin.entities.ammo"
 local Arena = require "bin.environment.arena"
 local Fps = require "bin.utils.fps_utils"
@@ -34,6 +36,7 @@ local Team = require "bin.environment.team"
 
 AI_SPEED = 0.6
 TEAM_SIZE = 3
+GLOBAL_TIMER = 0
 
 DEBUG = true
 DRAW_HITBOXES = false
@@ -72,13 +75,16 @@ end
 
 
 function love.update(dt)
+    GLOBAL_TIMER = GLOBAL_TIMER + dt
     ai_timer = ai_timer - dt
 
     -- target enemies
     if ai_timer < 0 then
         ai_timer = AI_SPEED
         for _, guy in ipairs(Guy.guy_mgr) do
-            guy:shoot()
+            if guy.exists then
+                guy:shoot()
+            end
         end
     
     end
@@ -137,5 +143,22 @@ function love.draw()
         for _, guy in ipairs(Guy.guy_mgr) do
             guy:draw_target()
         end
+    end
+
+    if DEBUG then
+        -- local txt = love.graphics.newText(love.graphics.getFont(), tostring(Guy.guy_mgr[1].exists))
+        love.graphics.print(tostring(Guy.guy_mgr[1].exists), 0, 0, 0, 3, 3)
+    end
+end
+
+
+
+-- code to make debugger better
+local love_errorhandler = love.errorhandler
+function love.errorhandler(msg)
+    if lldebugger then
+        error(msg, 2)
+    else
+        return love_errorhandler(msg)
     end
 end
