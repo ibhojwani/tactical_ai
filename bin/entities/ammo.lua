@@ -10,7 +10,7 @@ P.default_speed = 500
 P.default_width = 5
 P.default_height = 10
 P.default_bullet_var = 0.001
-P.default_damage=34
+P.default_damage = 34
 
 P.ammo_mgr = {}
 
@@ -45,12 +45,5 @@ function P:move(dt)
     self.loc.x = self.loc.x + self.dir.x * self.speed * dt
     self.loc.y = self.loc.y + self.dir.y * self.speed * dt
 end
-
-
-function P:draw()
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.loc.x, self.loc.y, self.width, self.height)
-end
-
 
 return Ammo

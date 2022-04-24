@@ -19,9 +19,10 @@ function P:new(team, args)
 
     p.team = team or {}
 
-    P.health = args.health or self.default_health
-    P.width = args.width or self.default_width
-    P.height = args.width or self.default_height
+    p.health = args.health or self.default_health
+    p.width = args.width or self.default_width
+    p.height = args.width or self.default_height
+    p.color = p.team.color
 
     -- Set spawn location
     local screen_width = love.graphics.getWidth()
@@ -35,6 +36,7 @@ function P:new(team, args)
         y = self.spawn_limits / 2 + (screen_height - self.spawn_limits) * (math.random() + 1) / 2
     end
     p.loc = {x=x, y=y}
+    p.hb_loc = p.loc
 
     -- Set inheritence
     self.__index = self
@@ -42,12 +44,6 @@ function P:new(team, args)
 
     self.guy_mgr[#self.guy_mgr+1] = p
     return p
-end
-
-
-function P:draw()
-    love.graphics.setColor(self.team.color)
-    love.graphics.rectangle("fill", self.loc.x, self.loc.y, self.width, self.height)
 end
 
 
@@ -65,6 +61,13 @@ function P:map_enemies()
     end
     self.target_loc = {x=self.target.loc.x, y=self.target.loc.y}
     self.target_dir = {x=self.target.loc.x - self.loc.x, y=self.target.loc.y - self.loc.y}
+end
+
+
+function P:draw_target()
+    if not self.target_loc then return nil end
+    love.graphics.setColor({0.5, 0.5, 0})
+    love.graphics.line(self.loc.x, self.loc.y, self.target_loc.x, self.target_loc.y)
 end
 
 

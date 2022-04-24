@@ -10,7 +10,8 @@
             guys can shoot
             bullets move
         to do
-            hitboxes
+            generate hitboxes
+            hit detection + death
             win state
             generate terrain
             enemy location memory
@@ -32,6 +33,16 @@ local Team = require "bin.environment.team"
 AI_SPEED = 0.6
 TEAM_SIZE = 3
 
+DEBUG = true
+DRAW_HITBOXES = false
+DRAW_TARGETS = false
+
+if DEBUG then
+    DRAW_HITBOXES = true
+    DRAW_TARGETS = true
+end
+
+
 function love.load()
     -- housekeeping
     love.window.setMode(0, 0)
@@ -42,7 +53,7 @@ function love.load()
 
     
     -- init teams
-    team1 = Team:new("team1", {0, 1, 0})
+    team1 = Team:new("team1", {0, 0, 1})
     team2 = Team:new("team2", {1, 0, 0})
 
     -- init guys
@@ -95,4 +106,19 @@ function love.draw()
         bullet:draw()
     end
 
+    -- draw debug tools
+    if DRAW_HITBOXES then
+        for _, guy in ipairs(Guy.guy_mgr) do
+            guy:draw_hb()
+        end
+        for _, ammo in ipairs(Ammo.ammo_mgr) do
+            ammo:draw_hb()
+        end
+    end
+
+    if DRAW_TARGETS then
+        for _, guy in ipairs(Guy.guy_mgr) do
+            guy:draw_target()
+        end
+    end
 end

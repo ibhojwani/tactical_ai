@@ -10,14 +10,6 @@ function table.copy(t)
     return rv
 end
 
-function P.t_unpack(t, start, stop)
-    start = start or 1
-    stop = stop or #t
-    if start==stop then return t[start]
-    elseif start>stop then return nil end
-    return t[start], P.t_unpack(t, start+1, stop)
-end
-
 function P.norm(vec)
     local sum = 0
     for _, v in ipairs(vec) do
