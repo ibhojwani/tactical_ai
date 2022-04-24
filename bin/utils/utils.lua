@@ -3,11 +3,19 @@ local P = {}
 Utils = P
 
 function table.copy(t)
-    rv = {}
+    local rv = {}
     for i, v in pairs(t) do
         rv[i] = v
     end
     return rv
+end
+
+function P.t_unpack(t, start, stop)
+    start = start or 1
+    stop = stop or #t
+    if start==stop then return t[start]
+    elseif start>stop then return nil end
+    return t[start], P.t_unpack(t, start+1, stop)
 end
 
 function P.norm(vec)

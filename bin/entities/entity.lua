@@ -18,9 +18,8 @@ P.default_hb_width = P.default_width
 P.default_hb_height = P.default_hb_height
 
 
-function Entity:new(...)
-    local args = {} -- Doing this to avoid a false positive syntax editor in the linter
-    args = {...}
+function Entity:new(args)
+    local args = args or {}
     local p = {}
 
     -- Entity visual location

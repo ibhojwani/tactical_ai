@@ -15,9 +15,8 @@ P.default_damage=34
 P.ammo_mgr = {}
 
 
-function P:new(init_loc, target_loc, ...)
-    local args = {} -- doing this to avoid a false positive syntax editor in the linter
-    args = {...}
+function P:new(init_loc, target_loc, args)
+    local args = args or {}
     args.loc = init_loc -- pass loc to Entity builder to get hitboxes
     local p = self.super.new(self, args)
 

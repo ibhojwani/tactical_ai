@@ -13,9 +13,8 @@ P.default_height = 10
 P.guy_mgr = {}
 
 
-function P:new(team, ...)
-    local args = {} -- doing this to avoid a false positive syntax editor in the linter
-    args = {...}
+function P:new(team, args)
+    local args = args or {}
     local p = self.super.new(self, args)
 
     p.team = team or {}
