@@ -35,13 +35,13 @@ local Fps = require "bin.utils.fps_utils"
 local Guy = require "bin.entities.guy"
 local Team = require "bin.environment.team"
 
-AI_SPEED = 0.6
-TEAM_SIZE = 3
+AI_SPEED = 0.3
+TEAM_SIZE = 30
 GLOBAL_TIMER = 0
 
-DEBUG = true
+DEBUG = false
 DRAW_HITBOXES = false
-DRAW_TARGETS = false
+DRAW_TARGETS = true
 
 if DEBUG then
     DRAW_HITBOXES = true
