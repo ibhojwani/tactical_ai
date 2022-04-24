@@ -9,9 +9,10 @@
             guys target other teams
             guys can shoot
             bullets move
-        to do
             generate hitboxes
+        to do
             hit detection + death
+            clean up dead objects
             win state
             generate terrain
             enemy location memory
@@ -27,6 +28,7 @@
 if arg[#arg] == "vsc_debug" then require("lldebugger").start() end
 local Ammo = require "bin.entities.ammo"
 local Arena = require "bin.environment.arena"
+local Fps = require "bin.utils.fps_utils"
 local Guy = require "bin.entities.guy"
 local Team = require "bin.environment.team"
 
@@ -86,13 +88,28 @@ function love.update(dt)
         ammo:move(dt)
     end
 
-    -- do hit detection
+    -- do guy<>guy hit detection
 
+    -- do bullet <> guy hit detectiona
+    for _, guy in ipairs(Guy.guy_mgr) do
+        if not (guy.exists and guy.collide) then goto guy_continue end
+    
+        for _, ammo in ipairs(Ammo.ammo_mgr) do
+            if not (ammo.exists and ammo.collide) then goto ammo_continue end
+            local collide = Fps.check_collision(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
+            if collide then
+                guy:register_hit(ammo)
+            end
+            ::ammo_continue::
+        end
+    
+        ::guy_continue::
+    end
 
 end
 
--- Draw a coloured rectangle.
 function love.draw()
+    -- background
     love.graphics.setColor({0, 0, 0})
     love.graphics.rectangle("fill", 0, 1, WIDTH, HEIGHT)
 
