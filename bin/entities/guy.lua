@@ -71,4 +71,16 @@ function P:draw_target()
 end
 
 
+function P:register_hit(ammo)
+    self.health = self.health - ammo.damage
+    if self.health <= 0 then
+        self.exists = false
+        self.collide = false
+    end
+    ammo.exists = false
+    ammo.collide = false
+end
+
+
+
 return Guy

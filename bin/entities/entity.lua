@@ -4,6 +4,7 @@
     
 ]]
 local Object = require "bin.utils.classic"
+local Fps = require "bin.utils.fps_utils"
 
 local P = Object:extend()
 Entity = P
@@ -47,15 +48,20 @@ end
 
 
 function P:draw()
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.loc.x, self.loc.y, self.width, self.height)
+    if self.exists then
+        love.graphics.setColor(self.color)
+        love.graphics.rectangle("fill", self.loc.x, self.loc.y, self.width, self.height)
+    end
 end
 
 
 function P:draw_hb()
-    love.graphics.setColor({0, 1, 0})
-    love.graphics.rectangle("line", self.hb_loc.x, self.hb_loc.y, self.hb_width, self.hb_height)
+    if self.collide then
+        love.graphics.setColor({0, 1, 0})
+        love.graphics.rectangle("line", self.hb_loc.x, self.hb_loc.y, self.hb_width, self.hb_height)
+    end
 end
+
 
 return Entity
 
