@@ -35,7 +35,7 @@ local Fps = require "bin.utils.fps_utils"
 local Guy = require "bin.entities.guy"
 local Team = require "bin.environment.team"
 
-AI_SPEED = 0.3
+AI_SPEED = 0.5
 TEAM_SIZE = 30
 GLOBAL_TIMER = 0
 

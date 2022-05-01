@@ -6,7 +6,7 @@ local P = Entity:extend()
 Ammo = P
 
 P.default_color = {0.858, 0.890, 0.168}
-P.default_speed = 500
+P.default_speed = 300
 P.default_width = 5
 P.default_height = 10
 P.default_bullet_var = 0.001
