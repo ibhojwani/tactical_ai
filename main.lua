@@ -12,11 +12,11 @@
             generate hitboxes
             hit detection + death
             retarget after kill
+            "win" state (they just stop shooting)
         to do
-            clean up dead objects
-            win state
             generate terrain
             enemy location memory
+            clean up dead objects
             navigate terrain with purpose
                 1) find enemy
                 2) communicate to team + hunt down enemy
@@ -54,6 +54,8 @@ function love.load()
     love.window.setMode(0, 0)
     WIDTH = love.graphics.getWidth()
     HEIGHT = love.graphics.getHeight()
+
+    world = love.physics.newWorld()
 
     math.randomseed(os.time())
 
