@@ -2,7 +2,7 @@
 local Object = require "bin.utils.classic"
 
 local P = Object:extend()
-Arena = P
+Wall = P
 
 
 function P:new()
