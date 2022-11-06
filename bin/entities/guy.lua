@@ -5,6 +5,7 @@ local Entity = require "bin.entities.entity"
 local P = Entity:extend()
 Guy = P
 
+P.__name = "Guy"
 P.spawn_limits = 100
 P.default_health = 100
 P.default_width = 10
@@ -15,6 +16,7 @@ P.guy_mgr = {}
 
 function P:new(team, args)
     local args = args or {}
+    -- parent does color, initial hit box and physical loc
     local p = self.super.new(self, args)
 
     p.team = team or {}
@@ -24,7 +26,6 @@ function P:new(team, args)
     p.height = args.width or self.default_height
     p.target = {}
     p.color = p.team.color
-    p.ammo_mgr = {}
 
     -- Set spawn location
     local screen_width = love.graphics.getWidth()
@@ -80,18 +81,16 @@ end
 
 
 function P:register_hit(ammo)
-    if (love.timer.getTime() - ammo.start_time) < 0.050 then return nil end
-
-    self.health = self.health - ammo.damage
+    self.super.register_hit(self, ammo)
     if self.health <= 0 then
-        self.exists = false
-        self.collide = false
         self.team.num_guys = self.team.num_guys - 1
     end
-    ammo.exists = false
-    ammo.collide = false
 
 end
 
+
+function P:bump_wall(wall)
+
+end
 
 return Guy

@@ -9,18 +9,20 @@ local Fps = require "bin.utils.fps_utils"
 local P = Object:extend()
 Entity = P
 
+P.__name = "Entity"
 P.default_loc = {x = 0, y = 0}
 P.default_width = 10
 P.default_height = 10
+P.default_rotation = 0
 P.default_color = {1, 1, 1}
 P.default_exists = true
 P.default_collide = true
 P.default_hb_loc = P.default_loc
 P.default_hb_width = P.default_width
 P.default_hb_height = P.default_hb_height
+P.default_hb_rotation = P.default_rotation
 
-
-function Entity:new(args)
+function P:new(args)
     local args = args or {}
     local p = {}
 
@@ -32,6 +34,7 @@ function Entity:new(args)
         p.loc = args.loc or table.copy(self.default_loc)
         p.width = args.width or self.default_width
         p.height = args.height or self.default_height
+        p.rotation = args.rotation or self.default_rotation
     end
 
     -- Entity hitbox location
@@ -41,7 +44,12 @@ function Entity:new(args)
         p.hb_loc =  p.loc or args.hb_loc or table.copy(self.default_hb_loc)
         p.hb_width = args.hb_width or p.width or self.default_hb_width
         p.hb_height = args.hb_height or p.height or self.default_hb_height
+        p.hb_rotation = args.hb_rotation or p.rotation or self.default_hb_rotation
+
     end
+
+    self.__index = self
+    setmetatable(p, self)
 
     return p
 end
@@ -49,8 +57,14 @@ end
 
 function P:draw()
     if self.exists then
+        love.graphics.push()
+
+        love.graphics.translate(self.loc.x, self.loc.y)
+        love.graphics.rotate(self.rotation * 2 * math.pi / 360)
         love.graphics.setColor(self.color)
-        love.graphics.rectangle("fill", self.loc.x, self.loc.y, self.width, self.height)
+        love.graphics.rectangle("fill", 0, 0, self.width, self.height)
+
+        love.graphics.pop()
     end
 end
 
@@ -62,6 +76,28 @@ function P:draw_hb()
     end
 end
 
+
+function P:register_hit(ammo)
+    if (love.timer.getTime() - ammo.start_time) < 0.050 then return nil end -- TODO: this could lead to shooting thru walls
+
+    if self.health == nil then goto nohealth end
+    self.health = self.health - ammo.damage
+    if self.health <= 0 then
+        ---@diagnostic disable-next-line: missing-parameter
+        self.die(self)
+    end
+
+    ::nohealth::
+    ammo.exists = false
+    ammo.collide = false
+
+end
+
+
+function P:die()
+    self.exists = false
+    self.collide = false
+end
 
 return Entity
 
