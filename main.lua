@@ -10,7 +10,6 @@ local Guy = require "bin.entities.guy"
 local Team = require "bin.environment.team"
 local Wall = require "bin.entities.wall"
 
-
 AI_SPEED = 0.5
 TEAM_SIZE = 1
 GLOBAL_TIMER = 0
@@ -85,7 +84,7 @@ function love.update(dt)
     ---------------------
     --- Hit Detection ---
     ---------------------
-    -- bullet <> guy hit detectiona
+    -- bullet <> guy hit detection
     for _, guy in ipairs(Guy.guy_mgr) do
         if not (guy.exists and guy.collide) then goto guy_continue1 end
     

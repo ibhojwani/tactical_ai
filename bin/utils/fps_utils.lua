@@ -1,16 +1,41 @@
-local Utils = require "bin.utils.utils"
+local Math = require "bin.utils.math"
 
 local P = {}
 Fps = P
 
 
-function P.check_broad_phase(args)
+function P.collide(objs)
+    objs = P.__collide_broad(objs)
+    objs = P.__collide_broadcollide_broad(objs)
+    return objs
+end
+
+-- function P.__collide_broad(args)
+--     --[[
+--     Implements an algorithm that checks if objects could be colliding
+--     depending on axis aligned bounding box (AABB) of hitbox, using
+--     Sort and Sweep algorithm.
+
+--     Inputs: Aribtrary nested table of n objects to check for collisions.
+--         Expects object to have:
+--         obj.AABB.x1, obj.AABB.x2, obj.AABB.y1, obj.AABB.y2
+--     Outputs: nxn matrix of potential collisions
+--     --]]
+
+--     -- Flatten nested table to get objects and initialize return val
+--     local objs = table.flatten(args)
+--     local rv = {}
+
+--     -- do first axis
+--     for i 
+-- end
+
+function P.__collide_narrow(args)
     local objs = table.flatten(args)
     
 end
 
-
-function P.check_collision(obj1, obj2)
+function P.check_collision2(obj1, obj2)
     if (obj1.shape == "circle") and (obj2.shape == "circle") then
         return P.check_collision_circ(obj1.hb_loc, obj1.radius, obj2.loc, obj2.radius)
     end
@@ -38,7 +63,7 @@ end
 
 function P.check_collision_circ(loc1, r1, loc2, r2)
     ---@diagnostic disable-next-line: redundant-parameter
-    return Utils:norm(Utils:vec_sub({loc1.x, loc1.y}, {loc2.x, loc2.y})) < (r1 + r2)
+    return Math:norm(Math:vec_sub({loc1.x, loc1.y}, {loc2.x, loc2.y})) < (r1 + r2)
 end
 
 

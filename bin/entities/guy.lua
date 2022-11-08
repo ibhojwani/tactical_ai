@@ -57,7 +57,7 @@ function P:shoot()
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then self:map_enemies() end
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then return nil end -- if no targets found, return
 
-    local bullet = Ammo:new(table.copy(self.loc), table.copy(self.target_loc), self.id + 1)
+    local bullet = Ammo:new(Table.copy(self.loc), Table.copy(self.target_loc), self.id + 1)
 end
 
 

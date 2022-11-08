@@ -1,6 +1,5 @@
 
 local Object = require "bin.utils.classic"
-local Utils = require "bin.utils.utils"
 
 local P = Entity:extend()
 Wall = P
