@@ -1,5 +1,6 @@
 
-local Utils = require "bin.utils.utils"
+local Math = require "bin.utils.math"
+require "bin.utils.utils"
 local Entity = require "bin.entities.entity"
 
 local P = Entity:extend()
@@ -32,9 +33,9 @@ function P:new(init_loc, target_loc, owner, args)
     p.start_time = love.timer.getTime()
 
     -- get direction of travel by getting vector between init and target locations, and adding random fuzz
-    local dir = Utils.vec_sub(p.target_loc, p.loc)
-    dir = Utils.normalize(dir)
-    p.dir = Utils.normalize({x = dir.x + Utils.normal(0, p.bullet_var), y = dir.y + Utils.normal(0, p.bullet_var)})
+    local dir = Math.vec_sub(p.target_loc, p.loc)
+    dir = Math.normalize(dir)
+    p.dir = Math.normalize({x = dir.x + math.normal(0, p.bullet_var), y = dir.y + math.normal(0, p.bullet_var)})
 
     self.__index = self
     setmetatable(p, self)
