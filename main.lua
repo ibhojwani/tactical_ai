@@ -1,32 +1,4 @@
 ---@diagnostic disable: lowercase-global
---[[
-    needs
-        done
-            teams generate
-            guys generate
-            guys appear on screen
-            guys target other teams
-            guys can shoot
-            bullets move
-            generate hitboxes
-            hit detection + death
-            retarget after kill
-            "win" state (they just stop shooting)
-            generate terrain
-            wall angles
-        to do
-            guys cant shoot thru walls
-            guys dont spawn in walls
-            function documentation
-            change rate of firing so more random per guy
-            enemy location memory
-            clean up dead objects
-            navigate terrain with purpose
-                1) find enemy
-                2) communicate to team + hunt down enemy
-                3) more complex stuff
---]]
-
 
 local lldebugger
 if arg[#arg] == "vsc_debug" then lldebugger = require("lldebugger").start() end
@@ -40,12 +12,12 @@ local Wall = require "bin.entities.wall"
 
 
 AI_SPEED = 0.5
-TEAM_SIZE = 2
+TEAM_SIZE = 1
 GLOBAL_TIMER = 0
-WALL_CNT = 10
+WALL_CNT = 0
 
 DEBUG = false
-DRAW_HITBOXES = false
+DRAW_HITBOXES = true
 DRAW_TARGETS = false
 LOG_HEALTH = true
 
@@ -119,9 +91,9 @@ function love.update(dt)
     
         for _, ammo in ipairs(Ammo.ammo_mgr) do
             if not (ammo.exists and ammo.collide) then goto ammo_continue1 end
-            local collide = Fps.check_collision(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
+            local collide = Fps.check_collision_rect(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
             if collide then
-                guy:register_hit(ammo)
+                ammo:register_hit(guy)
             end
             ::ammo_continue1::
         end
@@ -135,9 +107,9 @@ function love.update(dt)
     
         for _, ammo in ipairs(Ammo.ammo_mgr) do
             if not (ammo.exists and ammo.collide) then goto ammo_continue2 end
-            local collide = Fps.check_collision(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, wall.loc.x, wall.loc.y, wall.width, wall.height)
+            local collide = Fps.check_collision_rect(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, wall.loc.x, wall.loc.y, wall.width, wall.height)
             if collide then
-                wall:register_hit(ammo)
+                ammo:register_hit(wall)
             end
             ::ammo_continue2::
         end
@@ -151,7 +123,7 @@ function love.update(dt)
     
         for _, wall in ipairs(Wall.wall_mgr) do
             if not (wall.collide) then goto wall_continue3 end
-            local collide = Fps.check_collision(wall.loc.x, wall.loc.y, wall.width, wall.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
+            local collide = Fps.check_collision_rect(wall.loc.x, wall.loc.y, wall.width, wall.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
             if collide then
                 guy:bump_wall(wall) -- TODO
             end
@@ -189,6 +161,9 @@ function love.draw()
         end
         for _, ammo in ipairs(Ammo.ammo_mgr) do
             ammo:draw_hb()
+        end        
+        for _, wall in ipairs(Wall.wall_mgr) do
+            wall:draw_hb()
         end
     end
 

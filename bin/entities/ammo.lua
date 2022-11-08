@@ -6,26 +6,27 @@ local P = Entity:extend()
 Ammo = P
 
 P.__name = "Ammo"
+P.default_shape = "circle"
+P.default_radius = 5
 P.default_color = {0.858, 0.890, 0.168}
 P.default_speed = 1000
-P.default_width = 5
-P.default_height = 10
 P.default_bullet_var = 0.001
 P.default_damage = 34
 
 P.ammo_mgr = {}
 
 
-function P:new(init_loc, target_loc, args)
+function P:new(init_loc, target_loc, owner, args)
     local args = args or {}
     args.loc = init_loc -- pass loc to Entity builder to get hitboxes
     local p = self.super.new(self, args)
 
     p.target_loc = target_loc
+    p.owner = owner
+    p.team = args.team or nil
     p.color = args.color or self.default_color
     p.speed = args.speed or self.default_speed
-    p.width = args.width or self.default_width
-    p.height = args.height or self.default_height
+    p.radius = args.radius or self.default_radius
     p.bullet_var = args.color or self.default_bullet_var
     p.damage = args.color or self.default_damage
     p.start_time = love.timer.getTime()
@@ -44,9 +45,20 @@ function P:new(init_loc, target_loc, args)
 end
 
 
-function P:move(dt)
-    self.loc.x = self.loc.x + self.dir.x * self.speed * dt
-    self.loc.y = self.loc.y + self.dir.y * self.speed * dt
+function P:register_hit(target)
+    if self.owner == target.id then return nil end
+
+    if target.health == nil then goto nohealth end
+    target.health = target.health - self.damage
+    if target.health <= 0 then
+        target.die(target)
+    end
+
+    ::nohealth::
+    self.exists = false
+    self.collide = false
+
 end
+
 
 return Ammo

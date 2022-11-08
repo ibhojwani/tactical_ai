@@ -8,22 +8,25 @@ Guy = P
 P.__name = "Guy"
 P.spawn_limits = 100
 P.default_health = 100
-P.default_width = 10
-P.default_height = 10
+P.default_shape = "circle"
+P.default_radius = 10
 
 P.guy_mgr = {}
 
+P.id_gen = 0
 
 function P:new(team, args)
     local args = args or {}
     -- parent does color, initial hit box and physical loc
     local p = self.super.new(self, args)
 
+    p.id = self.id_gen
+    self.id_gen = self.id_gen + 1
+
     p.team = team or {}
 
     p.health = args.health or self.default_health
-    p.width = args.width or self.default_width
-    p.height = args.width or self.default_height
+    p.radius = args.radius or self.default_radius
     p.target = {}
     p.color = p.team.color
 
@@ -54,7 +57,7 @@ function P:shoot()
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then self:map_enemies() end
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then return nil end -- if no targets found, return
 
-    local bullet = Ammo:new(table.copy(self.loc), table.copy(self.target_loc))
+    local bullet = Ammo:new(table.copy(self.loc), table.copy(self.target_loc), self.id + 1)
 end
 
 
@@ -80,12 +83,9 @@ function P:draw_target()
 end
 
 
-function P:register_hit(ammo)
-    self.super.register_hit(self, ammo)
-    if self.health <= 0 then
-        self.team.num_guys = self.team.num_guys - 1
-    end
-
+function P:die()
+    self.super.die(self)
+    self.team.num_guys = self.team.num_guys - 1
 end
 
 

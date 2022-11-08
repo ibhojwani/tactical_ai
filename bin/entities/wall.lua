@@ -5,12 +5,16 @@ local Utils = require "bin.utils.utils"
 local P = Entity:extend()
 Wall = P
 
-P.default_health = 1000
+P.default_health = 33
+P.default_shape = "rect"
 P.default_width = 500
 P.default_height = 10
 P.default_x = love.graphics.getWidth() / 2
 P.default_y = love.graphics.getHeight() / 2
 P.default_rotation = 0
+
+P.max_width = 0
+P.max_height = 0
 
 P.wall_mgr = {}
 
