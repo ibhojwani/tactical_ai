@@ -8,12 +8,13 @@ local Arena = require "bin.environment.arena"
 local Fps = require "bin.utils.fps_utils"
 local Guy = require "bin.entities.guy"
 local Team = require "bin.environment.team"
+local Table = require "bin.utils.table"
 local Wall = require "bin.entities.wall"
 
 AI_SPEED = 0.5
 TEAM_SIZE = 1
 GLOBAL_TIMER = 0
-WALL_CNT = 0
+WALL_CNT = 40
 
 DEBUG = false
 DRAW_HITBOXES = true
@@ -84,54 +85,12 @@ function love.update(dt)
     ---------------------
     --- Hit Detection ---
     ---------------------
-    -- bullet <> guy hit detection
-    for _, guy in ipairs(Guy.guy_mgr) do
-        if not (guy.exists and guy.collide) then goto guy_continue1 end
-    
-        for _, ammo in ipairs(Ammo.ammo_mgr) do
-            if not (ammo.exists and ammo.collide) then goto ammo_continue1 end
-            local collide = Fps.check_collision_rect(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
-            if collide then
-                ammo:register_hit(guy)
-            end
-            ::ammo_continue1::
-        end
-    
-        ::guy_continue1::
-    end
+    local objects = Table.concatenate({Guy.guy_mgr, Wall.wall_mgr, Ammo.ammo_mgr})
+    Fps.run_collisions(objects)
 
-    -- bullet <> wall hit detection
-    for _, wall in ipairs(Wall.wall_mgr) do
-        if not (wall.collide) then goto wall_continue2 end
-    
-        for _, ammo in ipairs(Ammo.ammo_mgr) do
-            if not (ammo.exists and ammo.collide) then goto ammo_continue2 end
-            local collide = Fps.check_collision_rect(ammo.loc.x, ammo.loc.y, ammo.width, ammo.height, wall.loc.x, wall.loc.y, wall.width, wall.height)
-            if collide then
-                ammo:register_hit(wall)
-            end
-            ::ammo_continue2::
-        end
-
-        ::wall_continue2::
-    end
-
-    -- guy <> wall hit detection
-    for _, guy in ipairs(Guy.guy_mgr) do
-        if not (guy.exists and guy.collide) then goto guy_continue3 end
-    
-        for _, wall in ipairs(Wall.wall_mgr) do
-            if not (wall.collide) then goto wall_continue3 end
-            local collide = Fps.check_collision_rect(wall.loc.x, wall.loc.y, wall.width, wall.height, guy.loc.x, guy.loc.y, guy.width, guy.height)
-            if collide then
-                guy:bump_wall(wall) -- TODO
-            end
-            ::wall_continue3::
-        end
-    
-        ::guy_continue3::
-    end
 end
+
+
 
 function love.draw()
     -- background

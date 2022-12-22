@@ -70,4 +70,24 @@ function P.transpose(t)
     return rv
 end
 
+
+function P.concatenate(args)
+    local rv = {}
+    for _, t in ipairs(args) do
+        for _, v in ipairs(t) do
+            rv[#rv+1] = v
+        end
+    end
+    return rv
+end
+
+
+function P.contains(tbl, target)
+    for i, v in ipairs(tbl) do
+        if target == v then return true end
+    end
+    return false
+end
+
+
 return Table

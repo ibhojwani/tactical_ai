@@ -13,15 +13,10 @@ P.default_radius = 10
 
 P.guy_mgr = {}
 
-P.id_gen = 0
-
 function P:new(team, args)
     local args = args or {}
     -- parent does color, initial hit box and physical loc
     local p = self.super.new(self, args)
-
-    p.id = self.id_gen
-    self.id_gen = self.id_gen + 1
 
     p.team = team or {}
 
@@ -57,7 +52,8 @@ function P:shoot()
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then self:map_enemies() end
     if (not self.target) or (not self.target_dir) or (not self.target.exists) then return nil end -- if no targets found, return
 
-    local bullet = Ammo:new(Table.copy(self.loc), Table.copy(self.target_loc), self.id + 1)
+    local bullet = Ammo:new(Table.copy(self.loc), Table.copy(self.target_loc), self.id)
+    self.immune_from[#self.immune_from+1] = bullet.id
 end
 
 
