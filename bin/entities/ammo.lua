@@ -48,16 +48,7 @@ end
 
 function P:register_hit(target)
     if self.owner == target.id then return nil end
-
-    if target.health == nil then goto nohealth end
-    target.health = target.health - self.damage
-    if target.health <= 0 then
-        target.die(target)
-    end
-
-    ::nohealth::
-    self.exists = false
-    self.collide = false
+    self.super.register_hit(target)
 
 end
 

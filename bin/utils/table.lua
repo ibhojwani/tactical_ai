@@ -70,4 +70,14 @@ function P.transpose(t)
     return rv
 end
 
+
+function P.concat(args)
+    local rv = {}
+    for i, t in ipairs(args) do
+        rv[#rv+1] = t[i]
+    end
+    return rv
+end
+
+
 return Table

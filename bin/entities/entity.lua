@@ -16,6 +16,8 @@ P.__name = "Entity"
 P.default_color = {1, 1, 1}
 P.default_exists = true
 P.default_collide = true
+P.default_damage = 0
+P.default_health = 0
 
 -- character model
 P.default_loc = {x = 0, y = 0}
@@ -32,10 +34,6 @@ P.default_hb_height = P.default_height
 P.default_hb_width = P.default_width
 P.default_hb_rotation = P.default_rotation
 
--- axis aligned bounding box
-P.default_AABB_height = P.default_hb_height
-P.default_AABB_width = P.default_hb_width
-
 
 function P:new(args)
     local args = args or {}
@@ -43,6 +41,8 @@ function P:new(args)
 
     p.shape = args.shape or self.default_shape
     p.color = args.color or self.default_color
+    P.damage = args.damage or self.default_damage
+    P.health = args.health or self.default_health
     if not args.exists == nil then p.exists = args.exists else p.exists = self.default_exists end
 
     -- Entity visual location
@@ -64,10 +64,6 @@ function P:new(args)
         p.hb_height = args.hb_height or p.height or self.default_hb_height
         p.hb_rotation = args.hb_rotation or p.rotation or self.default_hb_rotation
 
-        p.aabb_loc =  args.aabb_loc or Table.copy(p.loc) or Table.copy(self.default_aabb_loc)
-        p.aabb_radius = args.aabb_radius or p.radius or self.default_aabb_radius
-        p.aabb_width = args.aabb_width or p.width or self.default_aabb_width
-        p.aabb_height = args.aabb_height or p.height or self.default_aabb_height
     end
 
     self.__index = self
@@ -112,6 +108,15 @@ function P:draw_hb()
     end
 end
 
+
+function P:register_hit(obj)
+    -- impact on this object of the collision
+    self.health = self.health - (obj.damage or 0)
+    if self.health <=0 then
+        -- self.die()
+    end
+
+end
 
 function P:die()
     self.exists = false
