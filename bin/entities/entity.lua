@@ -17,7 +17,7 @@ P.default_color = {1, 1, 1}
 P.default_exists = true
 P.default_collide = true
 P.default_damage = 0
-P.default_health = 0
+P.default_health = 100
 
 -- character model
 P.default_loc = {x = 0, y = 0}
@@ -34,15 +34,20 @@ P.default_hb_height = P.default_height
 P.default_hb_width = P.default_width
 P.default_hb_rotation = P.default_rotation
 
+P.id_gen = 0
 
 function P:new(args)
     local args = args or {}
     local p = {}
 
+    p.id = self.__name .. tostring(self.id_gen)
+    self.id_gen = self.id_gen + 1
+    p.immune_from = {p.id}
+
     p.shape = args.shape or self.default_shape
     p.color = args.color or self.default_color
-    P.damage = args.damage or self.default_damage
-    P.health = args.health or self.default_health
+    p.damage = args.damage or self.default_damage
+    p.health = args.health or self.default_health
     if not args.exists == nil then p.exists = args.exists else p.exists = self.default_exists end
 
     -- Entity visual location
@@ -109,11 +114,13 @@ function P:draw_hb()
 end
 
 
-function P:register_hit(obj)
+function P:register_hit(obj, damage)
     -- impact on this object of the collision
-    self.health = self.health - (obj.damage or 0)
+    if obj.owner == self.id then return nil end
+
+    self.health = self.health - (damage or obj.damage or 0)
     if self.health <=0 then
-        -- self.die()
+        self:die()
     end
 
 end
@@ -129,7 +136,11 @@ function P:move(dt, dir, speed)
     local dir = dir or self.dir
     self.loc.x = self.loc.x + dir.x * speed * dt
     self.loc.y = self.loc.y + dir.y * speed * dt
+
+    self.hb_loc.x = self.hb_loc.x + dir.x * speed * dt
+    self.hb_loc.y = self.hb_loc.y + dir.y * speed * dt
 end
+
 
 
 

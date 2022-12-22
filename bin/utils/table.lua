@@ -71,12 +71,22 @@ function P.transpose(t)
 end
 
 
-function P.concat(args)
+function P.concatenate(args)
     local rv = {}
-    for i, t in ipairs(args) do
-        rv[#rv+1] = t[i]
+    for _, t in ipairs(args) do
+        for _, v in ipairs(t) do
+            rv[#rv+1] = v
+        end
     end
     return rv
+end
+
+
+function P.contains(tbl, target)
+    for i, v in ipairs(tbl) do
+        if target == v then return true end
+    end
+    return false
 end
 
 

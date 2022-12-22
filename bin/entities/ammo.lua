@@ -1,6 +1,5 @@
 
 local Math = require "bin.utils.math"
-require "bin.utils.utils"
 local Entity = require "bin.entities.entity"
 
 local P = Entity:extend()
@@ -8,9 +7,9 @@ Ammo = P
 
 P.__name = "Ammo"
 P.default_shape = "circle"
-P.default_radius = 5
+P.default_radius = 1
 P.default_color = {0.858, 0.890, 0.168}
-P.default_speed = 1000
+P.default_speed = 400
 P.default_bullet_var = 0.001
 P.default_damage = 34
 
@@ -22,8 +21,10 @@ function P:new(init_loc, target_loc, owner, args)
     args.loc = init_loc -- pass loc to Entity builder to get hitboxes
     local p = self.super.new(self, args)
 
+    if p.id == "Ammo0" then p.id="Buns Bullet" end
+
     p.target_loc = target_loc
-    p.owner = owner
+    p.immune_from[#p.immune_from+1] = owner
     p.team = args.team or nil
     p.color = args.color or self.default_color
     p.speed = args.speed or self.default_speed
@@ -45,11 +46,8 @@ function P:new(init_loc, target_loc, owner, args)
     return p
 end
 
-
-function P:register_hit(target)
-    if self.owner == target.id then return nil end
-    self.super.register_hit(target)
-
+function P:register_hit(obj)
+    self.super.register_hit(self, obj, self.health)
 end
 
 
