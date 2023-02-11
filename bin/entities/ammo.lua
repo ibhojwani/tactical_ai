@@ -51,4 +51,9 @@ function P:register_hit(obj)
 end
 
 
+function P:__tostring()
+    return self.__name
+  end
+
+  
 return Ammo

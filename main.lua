@@ -7,19 +7,23 @@ local Ammo = require "bin.entities.ammo"
 local Arena = require "bin.environment.arena"
 local Fps = require "bin.utils.fps_utils"
 local Guy = require "bin.entities.guy"
-local Team = require "bin.environment.team"
+local Team = require "bin.entities.team"
 local Table = require "bin.utils.table"
 local Wall = require "bin.entities.wall"
 
 AI_SPEED = 0.5
 TEAM_SIZE = 1
 GLOBAL_TIMER = 0
-WALL_CNT = 40
+WALL_CNT = 10
+ARENA_SIZE = 0 -- smallest arena, only 1 gen type
+ARENA_TYPE = 3
 
 DEBUG = false
 DRAW_HITBOXES = true
 DRAW_TARGETS = false
 LOG_HEALTH = true
+print(love.graphics.getWidth())
+print(love.graphics.getHeight())
 
 if DEBUG then
     DRAW_HITBOXES = true
@@ -56,7 +60,7 @@ function love.load()
     end
 
     -- init walls
-    Arena:new({num_walls=WALL_CNT})
+    Arena:new({num_walls=WALL_CNT, arena_type=ARENA_TYPE})
 
 end
 

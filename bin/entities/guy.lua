@@ -19,7 +19,6 @@ function P:new(team, args)
     local p = self.super.new(self, args)
 
     p.team = team or {}
-
     p.health = args.health or self.default_health
     p.radius = args.radius or self.default_radius
     p.target = {}
@@ -88,5 +87,11 @@ end
 function P:bump_wall(wall)
 
 end
+
+
+function P:__tostring()
+    return self.__name
+  end
+
 
 return Guy

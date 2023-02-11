@@ -5,7 +5,7 @@ local P = Entity:extend()
 Wall = P
 
 P.__name = "Wall"
-P.default_health = 33
+P.default_health = 100
 P.default_shape = "rect"
 P.default_width = 500
 P.default_height = 10
@@ -37,4 +37,9 @@ function P:new(args)
 end
 
 
+function P:__tostring()
+    return self.__name
+  end
+
+  
 return Wall

@@ -25,7 +25,7 @@ P.default_shape = "circle"
 P.default_radius = 10
 P.default_height = 5
 P.default_width = 10
-P.default_rotation = {{1, 0}, {0, 1}}
+P.default_rotation = 0
 
 -- hitbox
 P.default_hb_loc = P.default_loc
@@ -83,6 +83,8 @@ function P:draw()
         love.graphics.push()
 
         love.graphics.translate(self.loc.x, self.loc.y)
+        love.graphics.rotate(self.rotation)
+
         love.graphics.setColor(self.color)
 
         if self.shape == "rect" then
@@ -90,7 +92,6 @@ function P:draw()
         else
             love.graphics.circle("fill", 0, 0, self.radius)
         end
-
         love.graphics.pop()
     end
 end
@@ -101,6 +102,8 @@ function P:draw_hb()
         love.graphics.push()
 
         love.graphics.translate(self.hb_loc.x, self.hb_loc.y)
+        love.graphics.rotate(self.hb_rotation)
+
         love.graphics.setColor({0, 1, 0})
 
         if self.shape == "rect" then
@@ -142,6 +145,9 @@ function P:move(dt, dir, speed)
 end
 
 
+function P:__tostring()
+    return self.__name
+  end
 
 
 return Entity
